@@ -1,0 +1,467 @@
+{
+  "info": {
+    "name": "Smart Olive Mill KPI Dashboard",
+    "description": "Chiamate alle API del back end Spring Boot del frantoio simulato. Avviare l'app (./mvnw spring-boot:run) ed eseguire le richieste in ordine.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "oilPriceId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Generazione dati",
+      "item": [
+        {
+          "name": "Genera campagna simulata",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/simulation/generate?seed=2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "simulation",
+                "generate"
+              ],
+              "query": [
+                {
+                  "key": "seed",
+                  "value": "2026"
+                }
+              ]
+            },
+            "description": "Sostituisce produzione, fermi e sottoprodotti con una campagna simulata e salva i KPI."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "const b = pm.response.json();",
+                  "pm.test('124 righe di produzione', () => pm.expect(b.productionRows).to.eql(124));",
+                  "pm.test('62 righe di sottoprodotti', () => pm.expect(b.byProductRows).to.eql(62));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. KPI",
+      "item": [
+        {
+          "name": "KPI campagna",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/kpi/campaign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "kpi",
+                "campaign"
+              ]
+            },
+            "description": "KPI aggregati sull'intera campagna."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "const b = pm.response.json();",
+                  "pm.test('OEE linea tra 0 e 100', () => pm.expect(b.lineOeePct).to.be.within(0, 100));",
+                  "pm.test('Qualità tra 0 e 100', () => pm.expect(b.qualityPct).to.be.within(0, 100));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "KPI giornalieri",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/kpi/daily",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "kpi",
+                "daily"
+              ]
+            },
+            "description": "KPI giorno per giorno per i grafici dell'andamento."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "const b = pm.response.json();",
+                  "pm.test('Una riga per giorno (62)', () => pm.expect(b.length).to.eql(62));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "KPI salvati",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/kpi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "kpi"
+              ]
+            },
+            "description": "Indicatori salvati nella tabella kpi."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "pm.test('10 KPI salvati', () => pm.expect(pm.response.json().length).to.eql(10));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ricalcola e salva KPI",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/kpi/campaign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "kpi",
+                "campaign"
+              ]
+            },
+            "description": "Ricalcola i KPI sui dati attuali e li salva."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Dati",
+      "item": [
+        {
+          "name": "Macchine",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/machines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "machines"
+              ]
+            },
+            "description": "Elenco delle macchine."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "pm.test('2 macchine', () => pm.expect(pm.response.json().length).to.eql(2));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Produzione giornaliera",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/production",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "production"
+              ]
+            },
+            "description": "Produzione per giorno e macchina."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fermi",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/downtimes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "downtimes"
+              ]
+            },
+            "description": "Fermi macchina con causa."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sottoprodotti",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/by-products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "by-products"
+              ]
+            },
+            "description": "Sansa umida, destinazione e kg recuperati."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Parametri economici",
+      "item": [
+        {
+          "name": "Parametri",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parameters",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parameters"
+              ]
+            },
+            "description": "Elenco dei parametri economici (prendere da qui l'id del prezzo olio)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambia prezzo olio a 10,5",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parameters/{{oilPriceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parameters",
+                "{{oilPriceId}}"
+              ]
+            },
+            "description": "Aggiorna il valore del parametro.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"value\": 10.5}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Valore aggiornato', () => pm.expect(pm.response.json().value).to.eql(10.5));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Rimetti prezzo olio a 9,5",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parameters/{{oilPriceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parameters",
+                "{{oilPriceId}}"
+              ]
+            },
+            "description": "Ripristina il valore stimato.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"value\": 9.5}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Valore negativo rifiutato",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parameters/{{oilPriceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parameters",
+                "{{oilPriceId}}"
+              ]
+            },
+            "description": "La validazione deve rifiutare un valore negativo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"value\": -1}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Risposta 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
