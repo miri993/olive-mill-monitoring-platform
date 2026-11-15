@@ -1,0 +1,25 @@
+.semi-circle-chart {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  align-self: center;
+}
+
+.semi-circle-chart-value {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .semi-circle-chart {
+    max-width: 260px;
+  }
+
+  .semi-circle-chart-value {
+    font-size: 26px;
+  }
+}

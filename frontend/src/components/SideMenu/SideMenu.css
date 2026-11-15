@@ -1,0 +1,44 @@
+.side-menu .MuiDrawer-paper {
+  width: 240px;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  background: var(--color-white);
+}
+
+.side-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.side-menu-item {
+  border-radius: var(--radius-small);
+}
+
+.side-menu-item.Mui-selected,
+.side-menu-item.Mui-selected:hover {
+  background: var(--color-olive-light);
+  color: var(--color-olive-dark);
+}
+
+.side-menu-item.Mui-selected .MuiListItemText-primary {
+  font-weight: 600;
+}
+
+@media (min-width: 900px) {
+  .side-menu {
+    position: sticky;
+    top: 68px;
+    flex-shrink: 0;
+    width: 220px;
+  }
+
+  .side-menu .MuiDrawer-paper {
+    position: static;
+    z-index: auto;
+    width: 220px;
+    padding: 24px 0;
+    border: none;
+    background: transparent;
+  }
+}
