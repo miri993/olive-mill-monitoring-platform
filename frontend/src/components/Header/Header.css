@@ -1,0 +1,31 @@
+.header-toolbar {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 10px;
+}
+
+.header-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  height: 40px;
+}
+
+/* sotto i 900px nascondo il titolo */
+.header-title {
+  display: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--font-size-title);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 900px) {
+  .header-title {
+    display: inline;
+  }
+}
