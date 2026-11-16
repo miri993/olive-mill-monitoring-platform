@@ -26,13 +26,13 @@ export default function HomePage() {
   }, [dispatch])
 
   const changeTab = (tab: string) => {
-    navigate(tab === 'dashboard' ? '/dashboard' : '/')
+    navigate(tab === 'dashboard' ? '/dashboard/panoramica' : '/')
     window.scrollTo({ top: 0 })
   }
 
   return (
     <>
-      <Header title="Frantoi in EVOluzione" logoSrc="/favicon.svg">
+      <Header title="Frantoi in EVOluzione" logoSrc="/favicon.svg" homePath="/">
         <NavTabs tabs={tabs} value={activeTab} onChange={changeTab} ariaLabel="Viste della piattaforma" />
       </Header>
 

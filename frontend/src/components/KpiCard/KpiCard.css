@@ -25,6 +25,10 @@
   color: var(--color-text-primary);
 }
 
+.kpi-card-tooltip {
+  margin: 2px !important;
+}
+
 @media (min-width: 900px) {
   .kpi-card {
     padding: 16px 20px 20px;

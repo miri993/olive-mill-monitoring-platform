@@ -3,6 +3,8 @@ import Button from '@mui/material/Button'
 import MenuIcon from '@mui/icons-material/Menu'
 import { Outlet, useLocation, useNavigate } from 'react-router'
 import SideMenu, { type MenuItem } from '../../components/SideMenu/SideMenu'
+import Loader from '../../components/Loader/Loader'
+import { useAppSelector } from '../../store/hooks'
 
 const dashboardSections: MenuItem[] = [
   { value: 'panoramica', label: 'Panoramica' },
@@ -19,6 +21,11 @@ export default function DashboardLayout() {
   const activeSection = pathname.split('/')[2] ?? 'panoramica'
   const activeLabel = dashboardSections.find((section) => section.value === activeSection)?.label
 
+  const loading = useAppSelector((state) =>
+    [state.kpi.campaignStatus, state.kpi.dailyStatus, state.downtimes.status, state.byProducts.status, state.parameters.status]
+      .some((status) => status === 'loading') || state.kpi.campaignStatus === 'idle',
+  )
+
   const changeSection = (section: string) => {
     navigate(`/dashboard/${section}`)
     window.scrollTo({ top: 0 })
@@ -34,7 +41,10 @@ export default function DashboardLayout() {
           onClick={() => setMenuOpen(true)} aria-label={`Apri il menu delle sezioni, sezione attuale ${activeLabel}`}>
           {activeLabel}
         </Button>
-        <Outlet />
+        {loading && <Loader label="Caricamento dei dati…" />}
+        <div className={loading ? 'dashboard-outlet dashboard-outlet-hidden' : 'dashboard-outlet'}>
+          <Outlet />
+        </div>
       </div>
     </div>
   )
