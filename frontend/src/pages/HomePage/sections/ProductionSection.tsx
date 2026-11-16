@@ -4,6 +4,8 @@ import Panel from '../../../components/Panel/Panel'
 import { useAppSelector } from '../../../store/hooks'
 import { colors } from '../../../styles/variables'
 import { formatNumber } from '../../../utils/format'
+import SectionHeader from '../../../components/SectionHeader/SectionHeader'
+import productionImage from '../../../assets/guglielmi-rotoballa.jpg'
 import './DashboardSections.css'
 
 // Sezione "Produzione": olive lavorate, olio prodotto e resa
@@ -17,10 +19,8 @@ export default function ProductionSection() {
 
   return (
     <section className="dashboard-section">
-      <div>
-        <h1 className="dashboard-title">Produzione</h1>
-        <p className="dashboard-intro">Olive lavorate e olio prodotto durante la campagna, giorno per giorno.</p>
-      </div>
+      <SectionHeader title="Produzione" intro="Olive lavorate e olio prodotto durante la campagna, giorno per giorno."
+        imageSrc={productionImage} imageAlt="Rotoballa di fieno accanto a un ulivo, con i trulli sullo sfondo" imageCredit="Foto di Mimmo Guglielmi, per gentile concessione" />
 
       <div className="kpi-grid">
         <KpiCard label="Olive lavorate" value={show(`${formatNumber(totalKg)} kg`)} />

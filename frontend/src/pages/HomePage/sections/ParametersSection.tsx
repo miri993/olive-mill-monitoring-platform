@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow'
 import Panel from '../../../components/Panel/Panel'
 import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { fetchParameters } from '../../../store/slices/parameterSlice'
+import SectionHeader from '../../../components/SectionHeader/SectionHeader'
 import './DashboardSections.css'
 
 // Sezione "Parametri": valori economici e tecnici usati per calcolare i KPI
@@ -20,10 +21,7 @@ export default function ParametersSection() {
 
   return (
     <section className="dashboard-section">
-      <div>
-        <h1 className="dashboard-title">Parametri</h1>
-        <p className="dashboard-intro">I valori usati per calcolare costi, efficienza e CO₂ della campagna.</p>
-      </div>
+      <SectionHeader title="Parametri" intro="I valori usati per calcolare costi, efficienza e CO₂ della campagna." />
 
       <Panel title="Parametri di calcolo">
         <div className="table-scroll">

@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { fetchByProducts } from '../../../store/slices/byProductSlice'
 import { colors } from '../../../styles/variables'
 import { formatNumber } from '../../../utils/format'
+import SectionHeader from '../../../components/SectionHeader/SectionHeader'
+import sustainabilityImage from '../../../assets/guglielmi-ulivo-cielo.jpg'
 import './DashboardSections.css'
 
 const destinationLabels: Record<string, string> = {
@@ -38,10 +40,8 @@ export default function SustainabilitySection() {
 
   return (
     <section className="dashboard-section">
-      <div>
-        <h1 className="dashboard-title">Sostenibilità</h1>
-        <p className="dashboard-intro">Energia consumata, CO₂ emessa e quanta sansa viene recuperata.</p>
-      </div>
+      <SectionHeader title="Sostenibilità" intro="Energia consumata, CO₂ emessa e quanta sansa viene recuperata."
+        imageSrc={sustainabilityImage} imageAlt="Ulivo secolare sotto il cielo blu" imageCredit="Foto di Mimmo Guglielmi, per gentile concessione" />
 
       <div className="kpi-grid">
         <KpiCard label="Energia consumata" value={show(`${formatNumber(totalKwh)} kWh`)}

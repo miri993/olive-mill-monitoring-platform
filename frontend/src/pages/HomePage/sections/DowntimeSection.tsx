@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import { fetchDowntimes } from '../../../store/slices/downtimeSlice'
 import { colors } from '../../../styles/variables'
 import { formatNumber, formatShortDate } from '../../../utils/format'
+import SectionHeader from '../../../components/SectionHeader/SectionHeader'
+import downtimeImage from '../../../assets/guglielmi-neve.jpg'
 import './DashboardSections.css'
 
 // Sezione "Fermi": ore e costi dei fermi per macchina e per causa
@@ -35,10 +37,8 @@ export default function DowntimeSection() {
 
   return (
     <section className="dashboard-section">
-      <div>
-        <h1 className="dashboard-title">Fermi</h1>
-        <p className="dashboard-intro">Quante volte e per quanto tempo si sono fermate le macchine, e quanto è costato.</p>
-      </div>
+      <SectionHeader title="Fermi" intro="Quante volte e per quanto tempo si sono fermate le macchine, e quanto è costato."
+        imageSrc={downtimeImage} imageAlt="Ulivi e trullo sotto la neve" imageCredit="Foto di Mimmo Guglielmi, per gentile concessione" />
 
       <div className="kpi-grid">
         <KpiCard label="Numero fermi" value={show(formatNumber(downtimes.length))} />

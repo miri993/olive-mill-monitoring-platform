@@ -23,9 +23,13 @@ export default function ProcessFlow({ steps, imageSrc, imageAlt, imageCredit }: 
           </li>
         ))}
       </ol>
-      {imageSrc && <img className="process-flow-image" src={imageSrc} alt={imageAlt ?? ''} />}
+      {imageSrc && (
+        <figure className="process-flow-figure">
+          <img className="process-flow-image" src={imageSrc} alt={imageAlt ?? ''} />
+          {imageCredit && <figcaption className="process-flow-credit">{imageCredit}</figcaption>}
+        </figure>
+      )}
       {!imageSrc && imageAlt && <div className="process-flow-image process-flow-image-placeholder">[Foto: {imageAlt}]</div>}
-      {imageCredit && <p className="process-flow-credit">{imageCredit}</p>}
     </div>
   )
 }

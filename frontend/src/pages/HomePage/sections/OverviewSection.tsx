@@ -6,6 +6,7 @@ import Panel from '../../../components/Panel/Panel'
 import { useAppSelector } from '../../../store/hooks'
 import { colors } from '../../../styles/variables'
 import { formatNumber } from '../../../utils/format'
+import SectionHeader from '../../../components/SectionHeader/SectionHeader'
 import './DashboardSections.css'
 
 // Sezione "Panoramica": KPI principali della campagna e andamento OEE
@@ -17,10 +18,7 @@ export default function OverviewSection() {
 
   return (
     <section className="dashboard-section">
-      <div>
-        <h1 className="dashboard-title">Panoramica</h1>
-        <p className="dashboard-intro">Gli indicatori principali dell'intera campagna olearia.</p>
-      </div>
+      <SectionHeader title="Panoramica" intro="Gli indicatori principali dell'intera campagna olearia." />
 
       {campaignStatus === 'failed' && (
         <Alert severity="error">Impossibile caricare i dati: controlla che il back end sia avviato.</Alert>
