@@ -11,6 +11,7 @@ interface DowntimeState {
 
 const initialState: DowntimeState = { items: [], status: 'idle', error: null }
 
+// Thunk asincrono: chiama il service e restituisce la risposta già tipizzata
 export const fetchDowntimes = createAsyncThunk('downtimes/fetch', () => downtimeService.getDowntimes())
 
 const downtimeSlice = createSlice({
@@ -18,6 +19,7 @@ const downtimeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Tre stati della richiesta: in attesa, completata, fallita
     builder
       .addCase(fetchDowntimes.pending, (state) => {
         state.status = 'loading'

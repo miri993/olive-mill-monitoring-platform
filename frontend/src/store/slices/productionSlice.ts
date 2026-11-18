@@ -11,6 +11,7 @@ interface ProductionState {
 
 const initialState: ProductionState = { items: [], status: 'idle', error: null }
 
+// Thunk asincrono: chiama il service e restituisce la risposta già tipizzata
 export const fetchProduction = createAsyncThunk('production/fetch', () => productionService.getProduction())
 
 const productionSlice = createSlice({
@@ -18,6 +19,7 @@ const productionSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Tre stati della richiesta: in attesa, completata, fallita
     builder
       .addCase(fetchProduction.pending, (state) => {
         state.status = 'loading'

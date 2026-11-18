@@ -12,6 +12,7 @@ type CardProps = {
   children?: ReactNode
 }
 
+// Card riutilizzabile con foto, credito della foto, titolo e testo
 export default function Card({ imageSrc, imageAlt, imageCredit, imagePosition, title, label, children }: CardProps) {
   return (
     <MuiCard className="card">

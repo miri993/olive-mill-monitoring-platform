@@ -14,6 +14,7 @@ type NavTabsProps = {
   ariaLabel: string
 }
 
+// Schede di navigazione principali 
 export default function NavTabs({ tabs, value, onChange, ariaLabel }: NavTabsProps) {
   return (
     <Tabs

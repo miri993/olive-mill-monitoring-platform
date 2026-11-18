@@ -11,6 +11,7 @@ interface ByProductState {
 
 const initialState: ByProductState = { items: [], status: 'idle', error: null }
 
+// Thunk asincrono: chiama il service e restituisce la risposta già tipizzata
 export const fetchByProducts = createAsyncThunk('byProducts/fetch', () => byProductService.getByProducts())
 
 const byProductSlice = createSlice({
@@ -18,6 +19,7 @@ const byProductSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Tre stati della richiesta: in attesa, completata, fallita
     builder
       .addCase(fetchByProducts.pending, (state) => {
         state.status = 'loading'

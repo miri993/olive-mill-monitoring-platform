@@ -13,6 +13,7 @@ type HeroBannerProps = {
   children?: ReactNode
 }
 
+// Banner iniziale della scheda "Il progetto": testo e pulsanti da un lato, foto con credito dall'altro
 export default function HeroBanner({ badge, title, subtitle, actionButtons, imageSrc, imageAlt, imageCredit, children }: HeroBannerProps) {
   return (
     <section className="hero-banner">

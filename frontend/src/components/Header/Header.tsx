@@ -12,6 +12,7 @@ type HeaderProps = {
   children?: ReactNode 
 }
 
+// Intestazione fissa: logo e nome del progetto (link alla home), più le schede passate come children
 export default function Header({ title, logoSrc, homePath, children }: HeaderProps) {
   return (
     <AppBar position="sticky">

@@ -11,6 +11,7 @@ interface MachineState {
 
 const initialState: MachineState = { items: [], status: 'idle', error: null }
 
+// Thunk asincrono: chiama il service e restituisce la risposta già tipizzata
 export const fetchMachines = createAsyncThunk('machines/fetch', () => machineService.getMachines())
 
 const machineSlice = createSlice({
@@ -18,6 +19,7 @@ const machineSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // Tre stati della richiesta: in attesa, completata, fallita
     builder
       .addCase(fetchMachines.pending, (state) => {
         state.status = 'loading'

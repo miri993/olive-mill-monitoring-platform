@@ -8,6 +8,7 @@ type PanelProps = {
   children: ReactNode
 }
 
+// Contenitore riutilizzabile con titolo e sottotitolo, raggruppa KPI e grafici nelle sezioni della dashboard
 export default function Panel({ title, subtitle, className, children }: PanelProps) {
   return (
     <section className={className ? `panel ${className}` : 'panel'}>

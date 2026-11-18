@@ -7,6 +7,7 @@ import parameterReducer from './slices/parameterSlice'
 import productionReducer from './slices/productionSlice'
 import simulationReducer from './slices/simulationSlice'
 
+// Store Redux centrale: uno slice per ogni risorsa dell'API
 export const store = configureStore({
   reducer: {
     machines: machineReducer,
@@ -19,5 +20,6 @@ export const store = configureStore({
   },
 })
 
+// Tipi dello store, usati dagli hook tipizzati in hooks.ts
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

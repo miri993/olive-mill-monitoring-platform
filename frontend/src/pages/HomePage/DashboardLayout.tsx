@@ -6,6 +6,7 @@ import SideMenu, { type MenuItem } from '../../components/SideMenu/SideMenu'
 import Loader from '../../components/Loader/Loader'
 import { useAppSelector } from '../../store/hooks'
 
+// Sezioni della dashboard: ognuna ha la sua rotta /dashboard/<sezione>
 const dashboardSections: MenuItem[] = [
   { value: 'panoramica', label: 'Panoramica' },
   { value: 'produzione', label: 'Produzione' },
@@ -14,6 +15,7 @@ const dashboardSections: MenuItem[] = [
   { value: 'parametri', label: 'Parametri' },
 ]
 
+// Layout comune della dashboard: menu laterale, pulsante del menu e sezione attiva (Outlet di React Router)
 export default function DashboardLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
@@ -21,11 +23,13 @@ export default function DashboardLayout() {
   const activeSection = pathname.split('/')[2] ?? 'panoramica'
   const activeLabel = dashboardSections.find((section) => section.value === activeSection)?.label
 
+  // Mostra il Loader finché almeno una delle richieste necessarie è in corso
   const loading = useAppSelector((state) =>
     [state.kpi.campaignStatus, state.kpi.dailyStatus, state.downtimes.status, state.byProducts.status, state.parameters.status]
       .some((status) => status === 'loading') || state.kpi.campaignStatus === 'idle',
   )
 
+  // Cambio sezione: aggiorna l'indirizzo e riporta la pagina in alto
   const changeSection = (section: string) => {
     navigate(`/dashboard/${section}`)
     window.scrollTo({ top: 0 })

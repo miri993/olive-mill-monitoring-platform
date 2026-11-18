@@ -13,6 +13,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import '../HomePage.css';
 
+// Fasi del percorso "Dall'oliva al dato", dal conferimento delle olive ai KPI
 const processSteps = [
   { label: 'Olive', description: 'kg conferiti' },
   { label: 'Frangitore', description: 'kg lavorati, kWh, fermi' },
@@ -21,12 +22,14 @@ const processSteps = [
   { label: 'Dashboard KPI', description: 'OEE, costo fermi, CO₂/L' },
 ]
 
+// Le tre card che presentano il progetto
 const cardList = [
   { imageSrc: productionImage, imageAlt: 'Linea di produzione dell\'olio', imageCredit: 'Foto di Taken su Pixabay', title: 'Misurare la produzione', label: 'Industria 4.0 · OEE, fermi, costi', text: 'Misurare la produzione rende chiara la perdita economica e le sue cause, così da cercare soluzioni mirate. Il prototipo potrà essere riutilizzato nelle campagne successive per verificare i miglioramenti ottenuti.' },
   { imageSrc: peopleImage, imageAlt: 'Ragazza di spalle seduta sulla porta di un trullo che guarda l\'uliveto', imageCredit: 'Foto dell\'autrice', imagePosition: 'center 62%', title: 'La persona al centro', label: 'Industria 5.0 · dati per decidere', text: 'Gli indicatori aiutano chi gestisce il frantoio a capire dove intervenire: per esempio se conviene acquistare macchinari più efficienti o ridurre i fermi più costosi. Nella sezione Parametri può vedere su quali valori sono calcolati i risultati.' },
   { imageSrc: byProductImage, imageAlt: 'Saponetta all\'olio d\'oliva', imageCredit: 'Foto di monfocus su Pixabay', title: 'Valorizzare gli scarti', label: 'Sostenibilità · polifenoli dalle acque di vegetazione', text: 'Sansa e acque di vegetazione sono sottoprodotti inquinanti e difficili da smaltire, ma possono diventare una risorsa. Dalle acque di vegetazione si recuperano polifenoli utili per integratori e cosmetici, grazie ad accordi con aziende partner. La piattaforma misura quanta parte degli scarti viene recuperata.' },
 ]
 
+// Scheda "Il progetto": presentazione del caso di studio prima della dashboard
 export default function ProjectSection() {
   const navigate = useNavigate()
 

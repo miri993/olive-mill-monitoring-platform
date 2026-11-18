@@ -1,3 +1,4 @@
+// Valori del tema in un solo punto: colori, proprietà dei fonts e border-radius.
 export const colors = {
   oliveDark: '#4B661E',
   olive: '#6D8F29',

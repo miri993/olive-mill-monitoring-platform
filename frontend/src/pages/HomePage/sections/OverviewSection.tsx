@@ -11,19 +11,25 @@ import './DashboardSections.css'
 
 // Sezione "Panoramica": KPI principali della campagna e andamento OEE
 export default function OverviewSection() {
+  // I KPI arrivano dallo store: HomePage li carica una sola volta con
+  // dispatch(fetchCampaignKpis()) e dispatch(fetchDailyKpis())
   const { campaign, campaignStatus, daily } = useAppSelector((state) => state.kpi)
 
+  // Il back end restituisce il costo dei fermi per macchina: la card mostra la somma
   const totalDowntimeCost = campaign ? campaign.frangitoreDowntimeCostEur + campaign.decanterDowntimeCostEur : 0
+  // Finché i dati non sono arrivati la card mostra un trattino
   const show = (text: string) => (campaign ? text : '—')
 
   return (
     <section className="dashboard-section">
       <SectionHeader title="Panoramica" intro="Gli indicatori principali dell'intera campagna olearia." />
 
+      {/* campaignStatus 'failed': il back end non ha risposto */}
       {campaignStatus === 'failed' && (
         <Alert severity="error">Impossibile caricare i dati: controlla che il back end sia avviato.</Alert>
       )}
 
+      {/* KpiCard riceve label, valore già formattato e il testo info mostrato nel Tooltip della «i» */}
       <div className="kpi-grid">
         <KpiCard label="OEE linea" value={show(`${formatNumber(campaign?.lineOeePct ?? 0, 1)} %`)}
           info="Efficienza complessiva della linea: disponibilità × prestazioni × qualità." />

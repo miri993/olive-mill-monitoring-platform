@@ -8,7 +8,9 @@ type SemiCircleChartProps = {
   label: string
 }
 
+// Grafico a semicerchio (Recharts) per i KPI in percentuale, ad esempio l'OEE
 export default function SemiCircleChart({ value, label }: SemiCircleChartProps) {
+  // Due spicchi: il valore del KPI e la parte che manca per arrivare al 100%
   const data = [
     { name: 'valore', value, fill: colors.olive },
     { name: 'resto', value: Math.max(100 - value, 0), fill: colors.oliveTint },

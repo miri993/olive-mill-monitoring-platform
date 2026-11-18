@@ -8,6 +8,7 @@ type SectionHeaderProps = {
   imageCredit?: string
 }
 
+// Intestazione di ogni sezione della dashboard: titolo, introduzione e foto opzionale
 export default function SectionHeader({ title, intro, imageSrc, imageAlt = '', imageCredit }: SectionHeaderProps) {
   return (
     <header className={imageSrc ? 'section-header section-header-with-image' : 'section-header'}>

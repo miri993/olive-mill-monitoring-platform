@@ -31,10 +31,12 @@ public class EconomicParameterController {
         return economicParameterService.findAll();
     }
 
+    // PUT /api/parameters/{id}: 200 con il parametro aggiornato, 404 se l'id non esiste
     @PutMapping("/{id}")
     public ResponseEntity<EconomicParameter> updateValue(@PathVariable Long id,
                                                          @Valid @RequestBody ValueRequest request) {
         return economicParameterService.findById(id)
+                // Aggiorna solo il campo value e salva
                 .map(parameter -> {
                     parameter.setValue(request.value());
                     return ResponseEntity.ok(economicParameterService.save(parameter));
@@ -42,6 +44,7 @@ public class EconomicParameterController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // DTO del body: value obbligatorio e >= 0, altrimenti 400 (Bean Validation)
     public record ValueRequest(@NotNull @PositiveOrZero Double value) {
     }
 }
