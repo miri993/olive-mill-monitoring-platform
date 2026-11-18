@@ -4,7 +4,9 @@ import axios from 'axios'
 // In sviluppo il proxy di Vite gira /api al back end su localhost:8080.
 export abstract class BaseService {
   protected readonly http = axios.create({
-    baseURL: '/api',
+    baseURL: import.meta.env.VITE_API_URL
+      ? `${import.meta.env.VITE_API_URL}/api`
+      : '/api',
     headers: { 'Content-Type': 'application/json' },
   })
 
