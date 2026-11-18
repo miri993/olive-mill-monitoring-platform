@@ -14,7 +14,7 @@ export default function SectionHeader({ title, intro, imageSrc, imageAlt = '', i
     <header className={imageSrc ? 'section-header section-header-with-image' : 'section-header'}>
       {imageSrc && (
         <figure className="section-header-figure">
-          <img className="section-header-image" src={imageSrc} alt={imageAlt} />
+          <img decoding="async" className="section-header-image" src={imageSrc} alt={imageAlt} />
           {imageCredit && <figcaption className="section-header-credit">{imageCredit}</figcaption>}
         </figure>
       )}

@@ -27,7 +27,7 @@ export default function HeroBanner({ badge, title, subtitle, actionButtons, imag
         {actionButtons && <div className="hero-banner-actions">{actionButtons}</div>}
       </div>
       <figure className="hero-banner-image">
-        <img src={imageSrc} alt={imageAlt} />
+        <img decoding="async" src={imageSrc} alt={imageAlt} />
         {imageCredit && <figcaption className="hero-banner-credit">{imageCredit}</figcaption>}
       </figure>
     </section>

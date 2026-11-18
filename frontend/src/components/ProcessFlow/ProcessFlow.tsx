@@ -25,7 +25,7 @@ export default function ProcessFlow({ steps, imageSrc, imageAlt, imageCredit }: 
       </ol>
       {imageSrc && (
         <figure className="process-flow-figure">
-          <img className="process-flow-image" src={imageSrc} alt={imageAlt ?? ''} />
+          <img decoding="async" className="process-flow-image" src={imageSrc} alt={imageAlt ?? ''} />
           {imageCredit && <figcaption className="process-flow-credit">{imageCredit}</figcaption>}
         </figure>
       )}

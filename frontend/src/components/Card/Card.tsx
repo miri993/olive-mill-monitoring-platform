@@ -19,7 +19,7 @@ export default function Card({ imageSrc, imageAlt, imageCredit, imagePosition, t
       {imageSrc
         ? (
           <figure className="card-figure">
-            <img className="card-image" src={imageSrc} alt={imageAlt} style={{ objectPosition: imagePosition }} />
+            <img decoding="async" className="card-image" src={imageSrc} alt={imageAlt} style={{ objectPosition: imagePosition }} />
             {imageCredit && <figcaption className="card-credit">{imageCredit}</figcaption>}
           </figure>
         )
