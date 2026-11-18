@@ -95,6 +95,7 @@ public class KpiService {
         return kpiRepository.saveAll(kpis);
     }
 
+    // KPI dell'intera campagna, calcolati sui totali dei 62 giorni e non come media dei giorni
     @Transactional(readOnly = true)
     public CampaignKpiSummary calculateCampaignKpis() {
         List<DailyProduction> production = dailyProductionRepository.findAll();
@@ -111,13 +112,16 @@ public class KpiService {
                 .mapToDouble(row -> valueOrZero(row.getDowngradedOilLiters()))
                 .sum();
         requirePositive(oilLiters, "Litri di olio totali");
+        // Qualità: quota di olio non declassato sul totale prodotto
         double quality = (oilLiters - downgradedOilLiters) / oilLiters;
+        // OEE di linea = OEE del decanter (ultima macchina) x qualità dell'olio
         double lineOee = oeeDecanter * quality;
 
         Map<String, Double> parameters = new HashMap<>();
         for (EconomicParameter parameter : economicParameterRepository.findAll()) {
             parameters.put(parameter.getName(), parameter.getValue());
         }
+        // Costo di un'ora di fermo = olio non prodotto in un'ora x prezzo + costo del personale fermo
         double hourlyDowntimeCost = (oilLiters / decanter.workedHours)
                 * requiredParameter(parameters, "Prezzo olio EVO")
                 + requiredParameter(parameters, "Costo manodopera")
@@ -131,6 +135,7 @@ public class KpiService {
                 .mapToDouble(row -> valueOrZero(row.getKwh()))
                 .sum();
         double emissionFactor = requiredParameter(parameters, "Fattore emissione rete Puglia");
+        // CO2 per litro = kWh / litri x fattore di emissione della rete pugliese (gCO2/kWh)
         double co2GramsPerLiter = totalKwh / oilLiters * emissionFactor;
         double co2TotalKg = totalKwh * emissionFactor / 1000;
 
@@ -139,6 +144,7 @@ public class KpiService {
                 .mapToDouble(row -> valueOrZero(row.getWetPomaceKg()))
                 .sum();
         requirePositive(wetPomaceKg, "I kg totali di sansa umida");
+        // Quota di sansa recuperata sul totale prodotto
         double recoveredByProduct = byProducts.stream()
                 .mapToDouble(row -> valueOrZero(row.getRecoveredKg()))
                 .sum() / wetPomaceKg;
@@ -205,6 +211,7 @@ public class KpiService {
         return result;
     }
 
+    // Riga di produzione di una macchina in un giorno
     private DailyProduction rowFor(List<DailyProduction> rows, String machineName) {
         return rows.stream()
                 .filter(row -> row.getMachine() != null && machineName.equals(row.getMachine().getName()))
@@ -224,6 +231,7 @@ public class KpiService {
         return availability * performance;
     }
 
+    // Legge i parametri economici dal database (nome -> valore)
     private Map<String, Double> loadParameters() {
         Map<String, Double> parameters = new HashMap<>();
         for (EconomicParameter parameter : economicParameterRepository.findAll()) {
@@ -232,6 +240,7 @@ public class KpiService {
         return parameters;
     }
 
+    // Somma ore previste, ore lavorate e kg di una macchina su tutta la campagna
     private ProductionTotals totalsFor(List<DailyProduction> production, String machineName) {
         List<DailyProduction> rows = production.stream()
                 .filter(row -> row.getMachine() != null
@@ -253,12 +262,16 @@ public class KpiService {
         return new ProductionTotals(plannedHours, workedHours, processedKg, capacityKgH);
     }
 
+    // OEE di una macchina = disponibilità x prestazioni (la qualità si applica solo alla linea)
     private double calculateOee(ProductionTotals totals) {
+        // Disponibilità: ore lavorate / ore previste
         double availability = totals.workedHours / totals.plannedHours;
+        // Prestazioni: kg lavorati / kg lavorabili alla capacità nominale
         double performance = totals.processedKg / (totals.workedHours * totals.capacityKgH);
         return availability * performance;
     }
 
+    // Costo dei fermi di una macchina = ore di fermo totali x costo orario
     private double calculateDowntimeCost(List<Downtime> downtimes,
                                          String machineName,
                                          double hourlyDowntimeCost) {
@@ -281,6 +294,7 @@ public class KpiService {
                 .orElseThrow(() -> new IllegalStateException("Macchina mancante: " + name));
     }
 
+    // Errore esplicito se manca un parametro necessario al calcolo
     private double requiredParameter(Map<String, Double> parameters, String name) {
         Double value = parameters.get(name);
         if (value == null) {
@@ -289,24 +303,29 @@ public class KpiService {
         return value;
     }
 
+    // Blocca le divisioni per zero quando mancano i dati
     private void requirePositive(double value, String description) {
         if (value <= 0) {
             throw new IllegalStateException(description + " devono essere maggiori di zero");
         }
     }
 
+    // I valori mancanti (null) contano come zero
     private double valueOrZero(Double value) {
         return value == null ? 0 : value;
     }
 
+    // Da rapporto a percentuale con due decimali
     private double percentage(double ratio) {
         return round(ratio * 100, 2);
     }
 
+    // Arrotondamento con BigDecimal per evitare gli errori dei numeri in virgola mobile
     private double round(double value, int scale) {
         return BigDecimal.valueOf(value).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 
+    // KPI di un giorno, restituiti da GET /api/kpi/daily
     public record DailyKpi(
         LocalDate date,
         double processedKg,
@@ -322,6 +341,7 @@ public class KpiService {
         double recoveredByProductPct) {
     }
 
+    // KPI di campagna, restituiti da GET /api/kpi/campaign
     public record CampaignKpiSummary(
         double oeeFrangitorePct,
         double oeeDecanterPct,
@@ -335,6 +355,7 @@ public class KpiService {
         double recoveredByProductPct) {
     }
 
+    // Totali di campagna di una macchina, usati per l'OEE
     private record ProductionTotals(
         double plannedHours,
         double workedHours,

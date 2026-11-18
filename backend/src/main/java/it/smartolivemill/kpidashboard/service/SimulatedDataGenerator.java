@@ -44,12 +44,14 @@ public class SimulatedDataGenerator {
     private record DowntimeRule(String cause, double probability, int minMinutes, int maxMinutes) {
     }
 
+    // Fermi del frangitore: es. la pulizia griglia avviene nell'80% dei giorni e dura 15-25 minuti
     private static final List<DowntimeRule> FRANGITORE_RULES = List.of(
             new DowntimeRule("Pulizia griglia", 0.80, 15, 25),
             new DowntimeRule("Olive finite / attesa conferimento", 0.55, 30, 110),
             new DowntimeRule("Usura martelli", 0.08, 30, 60),
             new DowntimeRule("Guasto elettrico", 0.02, 60, 120));
 
+    // Fermi del decanter: la pulizia di fine turno avviene ogni giorno (probabilità 1.00)
     private static final List<DowntimeRule> DECANTER_RULES = List.of(
             new DowntimeRule("Pulizia fine turno", 1.00, 25, 40),
             new DowntimeRule("Coclea intasata", 0.12, 30, 60),
@@ -157,9 +159,11 @@ public class SimulatedDataGenerator {
                                      double plannedHours, Random random) {
         List<Downtime> result = new ArrayList<>();
         for (DowntimeRule rule : rules) {
+            // Estrazione casuale: se il numero supera la probabilità, oggi questo fermo non avviene
             if (random.nextDouble() >= rule.probability()) {
                 continue;
             }
+            // Durata casuale tra minimo e massimo; l'inizio cade dentro il turno
             int minutes = rule.minMinutes() + random.nextInt(rule.maxMinutes() - rule.minMinutes() + 1);
             int latestStart = Math.max(0, (int) (plannedHours * 60) - minutes);
             Downtime downtime = new Downtime();
@@ -186,6 +190,7 @@ public class SimulatedDataGenerator {
         return row;
     }
 
+    // Usa la macchina salvata nel database; al primo avvio la crea con potenza e capacità di partenza
     private Machine findOrCreateMachine(String name, double powerKw, double capacityKgH) {
         return machineRepository.findByName(name)
                 .orElseGet(() -> machineRepository.save(new Machine(name, powerKw, capacityKgH)));
@@ -208,22 +213,27 @@ public class SimulatedDataGenerator {
                 .toList());
     }
 
+    // Somma delle ore di fermo di una macchina in un giorno
     private double totalHours(List<Downtime> downtimes) {
         return downtimes.stream().mapToDouble(Downtime::getDurationHours).sum();
     }
 
+    // Numero casuale tra min e max
     private double between(Random random, double min, double max) {
         return min + (max - min) * random.nextDouble();
     }
 
+    // Arrotonda alla mezz'ora (es. 9,7 -> 9,5)
     private double roundToHalf(double value) {
         return Math.round(value * 2) / 2.0;
     }
 
+    // Arrotondamento con BigDecimal per evitare gli errori dei numeri in virgola mobile
     private double round(double value, int scale) {
         return BigDecimal.valueOf(value).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 
+    // Riepilogo restituito dall'endpoint: seed usato, date della campagna e righe create per tabella
     public record GenerationSummary(
         long seed,
         LocalDate from,
